@@ -1,0 +1,42 @@
+from db import db
+from models.gamer import GamerModel
+import string
+import secrets
+
+class TableModel(db.Model):
+    __tablename__ = 'tables'
+
+    id = db.Column(db.String(10), primary_key=True)
+    game = db.Column(db.String(80))
+    event_id = db.Column(db.String(10), db.ForeignKey('events.id'))
+
+    event = db.relationship('EventModel')
+    # gamers = db.relationship('GamerModel', lazy='dynamic')
+
+
+    def __init__(self, game, event_id):
+        alphabet = string.ascii_letters + string.digits
+        self.id = ''.join(secrets.choice(alphabet) for i in range(10))
+        self.game = game
+        self.event_id = event_id
+
+    def json(self):
+        return {
+            'id': self.id,
+            'event_id': self.event_id,
+            'game': self.game
+            # 'gamers': [gamer.json() for gamer in self.gamers.all()]
+        }
+
+    @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+    def save_to_db(self):
+
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
