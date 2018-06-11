@@ -31,10 +31,7 @@ class GamerModel(db.Model):
     @classmethod
     def authenticate(cls, username, password):
         gamer = cls.find_by_username(username)
-        if gamer is None:
-            return False
-
-        if bcrypt.verify(password, gamer.password):
+        if gamer and bcrypt.verify(password, gamer.password):
             return gamer
 
         gamer = cls.find_by_email(username)
