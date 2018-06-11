@@ -30,7 +30,7 @@ api.add_resource(Gamer, '/v1/gamer/<id>')
 
 jwt = JWTManager(app)
 
-@app.route('/auth', methods=['POST'])
+@app.route('/v1/auth', methods=['POST'])
 def auth():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
@@ -42,7 +42,7 @@ def auth():
         }), 200
     return jsonify({"message": "Unauthorized"}), 403
 
-@app.route('/refresh', methods=['POST'])
+@app.route('/v1/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh():
     current_user = get_jwt_identity()
