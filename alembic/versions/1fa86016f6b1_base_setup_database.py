@@ -25,7 +25,7 @@ def upgrade():
         sa.Column('password', sa.String(60), unique=True)
     )
     op.create_table(
-        'evants',
+        'events',
         sa.Column('id', sa.String(10), primary_key=True),
         sa.Column('name', sa.String(80)),
         sa.Column('startdate', sa.DateTime(80)),

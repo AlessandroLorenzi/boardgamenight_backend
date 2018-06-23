@@ -11,6 +11,8 @@ class GamerModel(db.Model):
     email = db.Column(db.String(80))
     password = db.Column(db.String(60), unique=True)
 
+    events = db.relationship('EventModel', lazy='dynamic')
+
 
     def __init__(self, username, email, password):
         alphabet = string.ascii_letters + string.digits
@@ -44,8 +46,8 @@ class GamerModel(db.Model):
 
     @classmethod
     def identity(cls, payload):
-        username = payload['identity']
-        return cls.find_by_username(username, None)
+        id = payload['identity']
+        return cls.find_by_id(id, None)
 
     @classmethod
     def find_by_username(cls, username):

@@ -37,8 +37,8 @@ def auth():
     gamer = GamerModel.authenticate(username, password)
     if gamer:
         return  jsonify({
-            'access_token': create_access_token(identity=gamer.username),
-            'refresh_token': create_refresh_token(identity=gamer.username)
+            'access_token': create_access_token(identity=gamer.id),
+            'refresh_token': create_refresh_token(identity=gamer.id)
         }), 200
     return jsonify({"message": "Unauthorized"}), 403
 

@@ -13,19 +13,22 @@ class EventModel(db.Model):
     enddate = db.Column(db.DateTime(80))
     org = db.Column(db.String(80))
     place = db.Column(db.String(80))
+    owner = db.Column(db.String(10), db.ForeignKey('gamers.id'))
 
     tables = db.relationship('TableModel', lazy='dynamic')
 
-    def __init__(self, name, startdate, enddate, org, place):
+    def __init__(self, name, startdate, enddate, org, place, owner):
         alphabet = string.ascii_letters + string.digits
         self.id = ''.join(secrets.choice(alphabet) for i in range(10))
-        self.set_fields(name, startdate, enddate, org, place)
+        self.set_fields(name, startdate, enddate, org, place, owner)
 
 
-    def update(self, name, startdate, enddate, org, place):
-        self.set_fields(name, startdate, enddate, org, place)
+    def update(self, name, startdate, enddate, org, place, owner):
+        if owner != self.owner:
+            raise Exception('unauthorized')
+        self.set_fields(name, startdate, enddate, org, place, owner)
 
-    def set_fields(self, name, startdate, enddate, org, place):
+    def set_fields(self, name, startdate, enddate, org, place, owner):
         self.name = name
         timeformat =  "%Y-%m-%d %H:%M:%S"
 
@@ -33,6 +36,7 @@ class EventModel(db.Model):
         self.enddate = datetime.strptime(enddate,timeformat)
         self.org = org
         self.place = place
+        self.owner = owner
 
     def json(self):
         return {
@@ -43,12 +47,14 @@ class EventModel(db.Model):
             'tables': [table.json() for table in self.tables.all()],
             'place': self.place,
             'org': self.org,
+            'owner': self.owner
         }
     def reduced_json(self):
         return {
             'id': self.id,
             'name': self.name,
-            'startdate': str(self.startdate)
+            'startdate': str(self.startdate),
+            'owner': self.owner
         }
 
     @classmethod

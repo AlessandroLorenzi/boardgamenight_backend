@@ -1,6 +1,9 @@
 from flask_restful import Resource, reqparse
 from models.event import EventModel
 
+from flask_jwt_extended import (
+    jwt_required, get_jwt_identity
+)
 
 class Event(Resource):
     parser = reqparse.RequestParser()
@@ -35,9 +38,17 @@ class Event(Resource):
             return event.json()
         return {'message': 'Event not found'}, 404
 
+    @jwt_required
     def post(self, id):
         data = self.parser.parse_args()
-        event = EventModel(**data)
+        event = EventModel(
+            data.name,
+            data.startdate,
+            data.enddate,
+            data.org,
+            data.place,
+            get_jwt_identity()
+        )
         try:
             event.save_to_db()
         except:
@@ -45,15 +56,32 @@ class Event(Resource):
 
         return event.json(), 201
 
+    @jwt_required
     def put(self, id):
         data = self.parser.parse_args()
 
         event = EventModel.find_by_id(id)
         if event:
-            event.update(**data)
+            try:
+                event.update(
+                    data.name,
+                    data.startdate,
+                    data.enddate,
+                    data.org,
+                    data.place,
+                    get_jwt_identity()
+                )
+            except:
+                return {"message": "Non autorizzato"}, 403
         else:
-            event = EventModel(**data)
-        
+            event = EventModel(
+                data.name,
+                data.startdate,
+                data.enddate,
+                data.org,
+                data.place,
+                get_jwt_identity()
+            )
         try:
             event.save_to_db()
         except:
@@ -61,10 +89,14 @@ class Event(Resource):
 
         return event.json(), 201
 
+    @jwt_required
     def delete(self, id):
         event = EventModel.find_by_id(id)
         if event:
-            event.delete_from_db()
+            if event.owner == get_jwt_identity():
+                event.delete_from_db()
+            else:
+                return {'message': 'Non autorizzato'}, 403
 
         return {'message': 'Event deleted'}
 
