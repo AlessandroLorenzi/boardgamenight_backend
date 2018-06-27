@@ -50,6 +50,10 @@ class GamerModel(db.Model):
         return cls.find_by_id(id, None)
 
     @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+    @classmethod
     def find_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
 

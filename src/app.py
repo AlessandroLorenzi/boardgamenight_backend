@@ -6,7 +6,7 @@ from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager, create_access_token, create_refresh_token,
-    jwt_refresh_token_required, get_jwt_identity, create_access_token
+    jwt_refresh_token_required, jwt_required, get_jwt_identity, create_access_token
 )
 from resources.event import Event, EventList
 from resources.table import Table
@@ -50,6 +50,14 @@ def refresh():
         'access_token': create_access_token(identity=current_user)
     }), 200
 
+@app.route('/v1/whoami', methods=['GET'])
+@jwt_required
+def whoami():
+    current_user = get_jwt_identity()
+    print(get_jwt_identity())
+    return jsonify({
+        'username': GamerModel.find_by_id(get_jwt_identity()).username
+    }), 200
 
 @app.before_first_request
 def create_tables():
