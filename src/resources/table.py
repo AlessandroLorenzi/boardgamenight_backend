@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.table import TableModel
 
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 class Table(Resource):
     parser = reqparse.RequestParser()
@@ -15,18 +16,17 @@ class Table(Resource):
                         help="This field cannot be left blank!"
     )
 
-
-    def get(self, id):
-        table = EventModel.find_by_id(id)
-        if table:
-            return event.json()
-        return {'message': 'Table not found'}, 404
-
+    @jwt_required
     def post(self, id):
         data = self.parser.parse_args()
+        print(data)
         if len(data['game']) == 0:
             return {"message": "Game empty"}, 400
-        table = TableModel(**data)
+        table = TableModel(
+            data.game,
+            data.event_id,
+            get_jwt_identity()
+        )
 
         try:
             table.save_to_db()
@@ -35,9 +35,12 @@ class Table(Resource):
 
         return table.json(), 201
 
+    @jwt_required
     def delete(self, id):
         table = TableModel.find_by_id(id)
         if table:
-            table.delete_from_db()
-
+            if table.owner == get_jwt_identity():
+                table.delete_from_db()
+            else:
+                return {'message': 'Not authorized'}, 403
         return {'message': 'Table deleted'}
