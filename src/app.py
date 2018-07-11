@@ -10,6 +10,7 @@ from flask_jwt_extended import (
 )
 from resources.event import Event, EventList
 from resources.table import Table
+from resources.tablesubscription import TableSubscription
 from resources.gamer import Gamer
 
 
@@ -25,6 +26,7 @@ app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
 api.add_resource(EventList, '/v1/events')
 api.add_resource(Event, '/v1/event/<id>')
+api.add_resource(TableSubscription, '/v1/table/<id>/subscribe')
 api.add_resource(Table, '/v1/table/<id>')
 api.add_resource(Gamer, '/v1/gamer/<id>')
 

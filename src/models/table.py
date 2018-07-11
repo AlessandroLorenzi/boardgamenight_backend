@@ -1,7 +1,8 @@
 from db import db
-from models.gamer import GamerModel
 import string
 import secrets
+from models.tablesubscription import TableSubscriptionModel
+
 
 class TableModel(db.Model):
     __tablename__ = 'tables'
@@ -11,8 +12,7 @@ class TableModel(db.Model):
     event_id = db.Column(db.String(10), db.ForeignKey('events.id'))
     owner = db.Column(db.String(10), db.ForeignKey('gamers.id'))
 
-    event = db.relationship('EventModel')
-
+    tablesubscribtions = db.relationship('TableSubscriptionModel', lazy='dynamic')
 
     def __init__(self, game, event_id, owner):
         alphabet = string.ascii_letters + string.digits
@@ -26,7 +26,8 @@ class TableModel(db.Model):
             'id': self.id,
             'event_id': self.event_id,
             'game': self.game,
-            'owner': self.owner
+            'owner': self.owner,
+            'tablesubscribtions': [tablesubscribtions.json() for tablesubscribtions in self.tablesubscribtions.all()],
         }
 
 
