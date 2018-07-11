@@ -19,10 +19,10 @@ class TableSubscription(Resource):
 
     @jwt_required
     def delete(self, id):
-        tablesubscription = TableSubscriptionModel.find(id, get_jwt_identity())
+        tablesubscription = TableSubscriptionModel.find_by_id(table=id, gamer=get_jwt_identity())
         if tablesubscription:
             if tablesubscription.gamer == get_jwt_identity():
-                table.delete_from_db()
+                tablesubscription.delete_from_db()
             else:
                 return {'message': 'Not authorized'}, 403
         return {'message': 'Table deleted'}

@@ -14,6 +14,8 @@ class TableSubscriptionModel(db.Model):
             'gamer': self.gamer,
             'table': self.table
         }
+
+    @classmethod
     def find_by_id(cls, table, gamer):
         return cls.query.filter_by(table=table, gamer=gamer).first()
 

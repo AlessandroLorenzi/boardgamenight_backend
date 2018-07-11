@@ -56,7 +56,6 @@ def refresh():
 @jwt_required
 def whoami():
     current_user = get_jwt_identity()
-    print(get_jwt_identity())
     return jsonify({
         'username': GamerModel.find_by_id(get_jwt_identity()).username
     }), 200
