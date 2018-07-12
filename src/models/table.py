@@ -22,12 +22,15 @@ class TableModel(db.Model):
         self.owner = owner
 
     def json(self):
+    
         return {
             'id': self.id,
             'event_id': self.event_id,
             'game': self.game,
             'owner': self.owner,
-            'tablesubscribtions': [tablesubscribtions.json() for tablesubscribtions in self.tablesubscribtions.all()],
+            'tablesubscribtions': [
+                tablesubscribtions.json() for tablesubscribtions in self.tablesubscribtions.all()
+            ],
         }
 
 

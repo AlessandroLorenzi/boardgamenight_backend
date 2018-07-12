@@ -1,4 +1,5 @@
 from db import db
+from models.gamer import GamerModel
 
 class TableSubscriptionModel(db.Model):
     __tablename__ = 'tablesubscriptions'
@@ -12,6 +13,7 @@ class TableSubscriptionModel(db.Model):
     def json(self):
         return {
             'gamer': self.gamer,
+            'gamer_username': GamerModel.find_by_id(self.gamer).username,
             'table': self.table
         }
 
