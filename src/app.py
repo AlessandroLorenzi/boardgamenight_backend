@@ -20,9 +20,16 @@ from models.gamer import GamerModel
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+if os.environ['DATABASE_URI']:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+if os.environ['SECRET_KEY']:
+    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+else:
+    app.config['SECRET_KEY'] = 'boardgamenight'
 
 api.add_resource(EventList, '/v1/events')
 api.add_resource(Event, '/v1/event/<id>')
