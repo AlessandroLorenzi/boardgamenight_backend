@@ -26,15 +26,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if 'SECRET_KEY' in os.environ:
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
-api.add_resource(EventList, '/v1/events')
-api.add_resource(Event, '/v1/event/<id>')
-api.add_resource(TableSubscription, '/v1/table/<id>/subscribe')
-api.add_resource(Table, '/v1/table/<id>')
-api.add_resource(Gamer, '/v1/gamer/<id>')
+api.add_resource(EventList, '/api/v1/events')
+api.add_resource(Event, '/api/v1/event/<id>')
+api.add_resource(TableSubscription, '/api/v1/table/<id>/subscribe')
+api.add_resource(Table, '/api/v1/table/<id>')
+api.add_resource(Gamer, '/api/v1/gamer/<id>')
 
 jwt = JWTManager(app)
 
-@app.route('/v1/auth', methods=['POST'])
+@app.route('/api/v1/auth', methods=['POST'])
 def auth():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
@@ -46,7 +46,7 @@ def auth():
         }), 200
     return jsonify({"message": "Unauthorized"}), 403
 
-@app.route('/v1/refresh', methods=['POST'])
+@app.route('/api/v1/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh():
     current_user = get_jwt_identity()
@@ -54,7 +54,7 @@ def refresh():
         'access_token': create_access_token(identity=current_user)
     }), 200
 
-@app.route('/v1/whoami', methods=['GET'])
+@app.route('/api/v1/whoami', methods=['GET'])
 @jwt_required
 def whoami():
     current_user = get_jwt_identity()
