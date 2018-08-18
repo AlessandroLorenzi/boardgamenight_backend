@@ -10,12 +10,12 @@ RUN apk add --update --no-cache libffi-dev
 RUN pip install -r /requirements.txt
 RUN pip install gunicorn
 
-COPY src /src
+COPY src /app
 
-WORKDIR /src
+WORKDIR /app
 
 EXPOSE 5000
 
-ENTRYPOINT ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
 
 

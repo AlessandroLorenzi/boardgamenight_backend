@@ -1,5 +1,0 @@
-#!/bin/bash
-
-source venv/bin/activate
-source ~/.boardgamenight
-python ./src/app.py
