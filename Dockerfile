@@ -10,9 +10,9 @@ RUN apk add --update --no-cache libffi-dev
 RUN pip install -r /requirements.txt
 RUN pip install gunicorn
 
-COPY src /app
+COPY . /app
 
-WORKDIR /app
+WORKDIR /app/src
 
 EXPOSE 5000
 
