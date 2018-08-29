@@ -25,6 +25,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if 'SECRET_KEY' in os.environ:
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+else:
+    app.config['SECRET_KEY'] = 'SBUCCIABANANE'
 
 api.add_resource(EventList, '/api/v1/events')
 api.add_resource(Event, '/api/v1/event/<id>')
@@ -40,6 +42,7 @@ def auth():
     password = request.json.get('password', None)
     gamer = GamerModel.authenticate(username, password)
     if gamer:
+        print(gamer)
         return  jsonify({
             'access_token': create_access_token(identity=gamer.id),
             'refresh_token': create_refresh_token(identity=gamer.id)
@@ -58,9 +61,7 @@ def refresh():
 @jwt_required
 def whoami():
     current_user = get_jwt_identity()
-    return jsonify({
-        'username': GamerModel.find_by_id(get_jwt_identity()).username
-    }), 200
+    return jsonify( GamerModel.find_by_id(get_jwt_identity()).json() ), 200
 
 @app.before_first_request
 def create_tables():

@@ -54,7 +54,9 @@ class EventModel(db.Model):
             'id': self.id,
             'name': self.name,
             'startdate': str(self.startdate),
-            'owner': self.owner
+            'owner': self.owner,
+            'org' : self.org,
+            'ntables' : len(self.tables.all())
         }
 
     @classmethod

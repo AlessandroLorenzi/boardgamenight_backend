@@ -27,7 +27,9 @@ class GamerModel(db.Model):
 
     def json(self):
         return {
-            'username': self.username
+            'username': self.username,
+            'id' : self.id,
+            'email' : self.email
         }
 
     @classmethod

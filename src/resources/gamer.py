@@ -20,10 +20,17 @@ class Gamer(Resource):
                         help="This field cannot be left blank!"
     )
     def get(self, id):
-        gamer = EventModel.find_by_id(id)
+        gamer = GamerModel.find_by_id(id)
         if gamer:
-            return event.json()
+            return gamer.json()
         return {'message': 'Gamer not found'}, 404
+        
+    def find(self, name):
+        gamer = GamerModel.find_by_username(name)
+        if gamer:
+            return gamer.json()
+        return {'message': 'Gamer not found'}, 404
+
 
     def post(self, id):
         data = self.parser.parse_args()

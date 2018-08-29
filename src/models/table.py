@@ -12,7 +12,7 @@ class TableModel(db.Model):
     event_id = db.Column(db.String(10), db.ForeignKey('events.id'))
     owner = db.Column(db.String(10), db.ForeignKey('gamers.id'))
 
-    tablesubscribtions = db.relationship('TableSubscriptionModel', lazy='dynamic')
+    tablesubscribtions = db.relationship('TableSubscriptionModel', lazy='dynamic', cascade="all, delete-orphan")
 
     def __init__(self, game, event_id, owner):
         alphabet = string.ascii_letters + string.digits
@@ -28,7 +28,7 @@ class TableModel(db.Model):
             'event_id': self.event_id,
             'game': self.game,
             'owner': self.owner,
-            'tablesubscribtions': [
+            'gamers': [
                 tablesubscribtions.json() for tablesubscribtions in self.tablesubscribtions.all()
             ],
         }

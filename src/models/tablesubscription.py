@@ -12,8 +12,8 @@ class TableSubscriptionModel(db.Model):
 
     def json(self):
         return {
-            'gamer': self.gamer,
-            'gamer_username': GamerModel.find_by_id(self.gamer).username,
+            'id': self.gamer,
+            'username': GamerModel.find_by_id(self.gamer).username,
             'table': self.table
         }
 
