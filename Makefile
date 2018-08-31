@@ -10,6 +10,6 @@ production:
 	docker stop boardgamenight_backend || true
 	sleep .2
 	docker rm -f boardgamenight_backend || true
-	docker run --env-file ~/.boardgamenight -p 5000:5000 -d --name boardgamenight_backend  boardgamenightbackend ./app.py
+	docker run --env-file ~/.boardgamenight -v $(shell pwd)/../alembic.production.ini:/app/alembic.ini -p 5000:5000 -d --name boardgamenight_backend  boardgamenightbackend ./app.py
 
 
