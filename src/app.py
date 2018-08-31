@@ -20,7 +20,12 @@ from models.gamer import GamerModel
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+
+if 'DATABASE_URI' in os.environ:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if 'SECRET_KEY' in os.environ:
