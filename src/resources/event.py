@@ -27,6 +27,11 @@ class Event(Resource):
                         required=True,
                         help="This field cannot be left blank!"
     )
+    parser.add_argument('image',
+                        type=str,
+                        required=False,
+                        default="//assets/img/chess.jpg"
+    )
     parser.add_argument('place',
                         type=str,
                         required=True,
@@ -47,6 +52,7 @@ class Event(Resource):
             data.enddate,
             data.org,
             data.place,
+            data.image,
             get_jwt_identity()
         )
         try:
@@ -59,6 +65,7 @@ class Event(Resource):
     @jwt_required
     def put(self, id):
         data = self.parser.parse_args()
+        print(data)
 
         event = EventModel.find_by_id(id)
         if event:
@@ -69,6 +76,7 @@ class Event(Resource):
                     data.enddate,
                     data.org,
                     data.place,
+                    data.image,
                     get_jwt_identity()
                 )
             except:
@@ -80,6 +88,7 @@ class Event(Resource):
                 data.enddate,
                 data.org,
                 data.place,
+                data.image,
                 get_jwt_identity()
             )
         try:
