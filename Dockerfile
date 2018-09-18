@@ -5,8 +5,7 @@ COPY requirements.txt /requirements.txt
 RUN apk add --update --no-cache alpine-sdk
 
 RUN apk add --update --no-cache libffi-dev
-
-RUN apk add python2 py2-pip gcc python2-dev musl-dev
+RUN apk add --no-cache python3-dev mariadb-dev build-base
 
 
 RUN pip install -r /requirements.txt
